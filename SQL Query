@@ -1,0 +1,154 @@
+USE [DS_training]
+GO
+
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROC [dbo].[BLD_WRK_Task_20170817]
+-- =============================================
+-- Author:		Fandy Tanamal
+-- Create date: 20170817
+-- Description:	Raw >> WRK
+-- MOD DATE: 
+-- =============================================
+AS
+BEGIN
+-- =============================================
+-- DROP TABLE
+-- =============================================
+IF OBJECT_ID('WRK_Task_20170817') IS NOT NULL
+DROP TABLE [WRK_Task_20170817]
+-- =============================================
+-- CREATE TABLE
+-- =============================================
+CREATE TABLE [WRK_Task_20170817]
+(
+	[RowNumber]				int identity (1,1)
+	,[patient_id]			Varchar(100)
+	,[bill_id]				Varchar(100)
+	,[date_of_birth]		date	
+	,[race]					Varchar(100)	
+	,[gender]				Varchar(100)
+	,[date_of_admission]	date
+	,[date_of_discharge]	date
+	,[date_of_stay]			int
+	,[resident_status]		Varchar(100)
+	,[weight]				float
+	,[height]				float
+	,[medical_history_1]	Varchar(1)
+	,[medical_history_2]	Varchar(1)
+	,[medical_history_3]	Varchar(1)
+	,[medical_history_4]	Varchar(1)
+	,[medical_history_5]	Varchar(1)
+	,[medical_history_6]	Varchar(1)
+	,[medical_history_7]	Varchar(1)
+	,[preop_medication_1]	Varchar(1)
+	,[preop_medication_2]	Varchar(1)
+	,[preop_medication_3]	Varchar(1)
+	,[preop_medication_4]	Varchar(1)
+	,[preop_medication_5]	Varchar(1)
+	,[preop_medication_6]	Varchar(1)
+	,[symptom_1]			Varchar(1)
+	,[symptom_2]			Varchar(1)
+	,[symptom_3]			Varchar(1)
+	,[symptom_4]			Varchar(1)
+	,[symptom_5]			Varchar(1)
+	,[lab_result_1]			float
+	,[lab_result_2]			float
+	,[lab_result_3]			float
+	,[amount]				Float	
+)
+-- =============================================
+-- truncate table
+-- =============================================
+truncate table [WRK_Task_20170817]
+-- =============================================
+-- INSERT INTO
+-- =============================================
+INSERT INTO [WRK_Task_20170817]
+(
+	[patient_id]			
+	,[bill_id]			
+	,[date_of_birth]			
+	,[race]							
+	,[gender]								
+	,[date_of_admission]	
+	,[date_of_discharge]
+	,[date_of_stay]	
+	,[resident_status]
+	,[weight]				
+	,[height]
+	,[medical_history_1]	
+	,[medical_history_2]	
+	,[medical_history_3]	
+	,[medical_history_4]	
+	,[medical_history_5]	
+	,[medical_history_6]	
+	,[medical_history_7]	
+	,[preop_medication_1]	
+	,[preop_medication_2]	
+	,[preop_medication_3]	
+	,[preop_medication_4]	
+	,[preop_medication_5]
+	,[preop_medication_6]
+	,[symptom_1]		
+	,[symptom_2]		
+	,[symptom_3]			
+	,[symptom_4]		
+	,[symptom_5]			
+	,[lab_result_1]		
+	,[lab_result_2]			
+	,[lab_result_3]			
+	,[amount]				
+	)
+SELECT 
+	B.[patient_id]			
+	,B.[bill_id]			
+	,D.[date_of_birth]			
+	,D.[race]								
+	,D.[gender]							
+	,C.[date_of_admission]	
+	,C.[date_of_discharge]
+	,DATEDIFF(day, C.[date_of_admission], C.[date_of_discharge])	
+	,D.[resident_status]
+	,C.[weight]				
+	,C.[height]	
+	,C.[medical_history_1]	
+	,C.[medical_history_2]	
+	,C.[medical_history_3]	
+	,C.[medical_history_4]	
+	,C.[medical_history_5]	
+	,C.[medical_history_6]	
+	,C.[medical_history_7]	
+	,C.[preop_medication_1]	
+	,C.[preop_medication_2]	
+	,C.[preop_medication_3]	
+	,C.[preop_medication_4]	
+	,C.[preop_medication_5]
+	,C.[preop_medication_6]
+	,C.[symptom_1]		
+	,C.[symptom_2]		
+	,C.[symptom_3]			
+	,C.[symptom_4]		
+	,C.[symptom_5]			
+	,C.[lab_result_1]		
+	,C.[lab_result_2]			
+	,C.[lab_result_3]			
+	,A.[amount]	
+FROM [dbo].[Raw_Task2] as B
+INNER JOIN [dbo].[Raw_Task3] as C on C.[id] = B.[patient_id]
+INNER JOIN [dbo].[Raw_Task1] as A on A.[bill_id] = B.[bill_id]
+INNER JOIN [dbo].[Raw_Task4] as D on D.[patient_id] = B.[patient_id]
+
+
+-- =============================================
+-- FILTER OUT THE EMPTY VALUE
+-- =============================================
+
+where [medical_history_2] LIKE '_'  
+AND [medical_history_5] LIKE '_'   
+
+--(14468 rows affected)
+END
